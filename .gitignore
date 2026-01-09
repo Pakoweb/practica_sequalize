@@ -1,0 +1,51 @@
+# Dependencias
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Archivos de entorno
+.env
+.env.*.local
+
+# Build / dist
+dist/
+build/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+.vite/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Editores / IDEs
+.vscode/
+.idea/
+*.swp
+
+# Next.js / Nuxt / SvelteKit
+.next/
+.nuxt/
+.output/
+.svelte-kit/
+
+# PM2
+pids
+*.pid
+*.seed
+
+# Turbo / Monorepos
+.turbo/
