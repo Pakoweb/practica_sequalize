@@ -4,10 +4,15 @@ import path from "path";
 
 const modelsPath = "./models";
 const controllersPath = "./controllers";
+const controllersBasePath = "./controllers/base";
+const servicesPath = "./services";
 const routesPath = "./routes";
 
 fs.mkdirSync(controllersPath, { recursive: true });
+fs.mkdirSync(controllersBasePath, { recursive: true });
+fs.mkdirSync(servicesPath, { recursive: true });
 fs.mkdirSync(routesPath, { recursive: true });
+
 
 // Filtramos solo los modelos (sin incluir init-models.js)
 const models = fs.readdirSync(modelsPath)
@@ -17,20 +22,45 @@ for (const modelFile of models) {
   const modelName = path.basename(modelFile, ".js"); // ejemplo: productos
   const modelClass = modelName.charAt(0).toUpperCase() + modelName.slice(1); // Productos
   const singular = modelName.replace(/s$/, ""); // producto, cliente, pedido, etc.
-
-  // ---------- CONTROLADOR ----------
-  const controllerContent = `// controllers/${modelName}Controller.js
+  
+  // ---------- SERVICE ----------
+  const serviceContent = `// services/${modelName}Service.js
 import { sequelize } from "../config/db.js";
 import ${modelName} from "../models/${modelFile}";
 import { DataTypes } from "sequelize";
 
-// 🔧 Inicializamos el modelo con la conexión activa
+// Inicializamos el modelo con la conexión activa
 const ${modelClass.slice(0, -1)} = ${modelName}.init(sequelize, DataTypes);
+
+export const crear = (data) => ${modelClass.slice(0, -1)}.create(data);
+export const listar = () => ${modelClass.slice(0, -1)}.findAll();
+export const obtenerPorId = (id) => ${modelClass.slice(0, -1)}.findByPk(id);
+
+export const actualizar = async (id, data) => {
+  const item = await ${modelClass.slice(0, -1)}.findByPk(id);
+  if (!item) return null;
+  await item.update(data);
+  return item;
+};
+
+export const eliminar = async (id) => {
+  const item = await ${modelClass.slice(0, -1)}.findByPk(id);
+  if (!item) return null;
+  await item.destroy();
+  return true;
+};
+`;
+  fs.writeFileSync(`${servicesPath}/${modelName}Service.js`, serviceContent);
+
+
+    // ---------- CONTROLADOR BASE ----------
+  const baseControllerContent = `// controllers/base/${modelName}BaseController.js
+import * as Service from "../../services/${modelName}Service.js";
 
 // CREATE
 export const crear${modelClass.slice(0, -1)} = async (req, res) => {
   try {
-    const nuevo = await ${modelClass.slice(0, -1)}.create(req.body);
+    const nuevo = await Service.crear(req.body);
     res.status(201).json(nuevo);
   } catch (error) {
     console.error(error);
@@ -41,7 +71,7 @@ export const crear${modelClass.slice(0, -1)} = async (req, res) => {
 // READ (todos)
 export const obtener${modelClass} = async (req, res) => {
   try {
-    const lista = await ${modelClass.slice(0, -1)}.findAll();
+    const lista = await Service.listar();
     res.json(lista);
   } catch (error) {
     console.error(error);
@@ -52,7 +82,7 @@ export const obtener${modelClass} = async (req, res) => {
 // READ (uno)
 export const obtener${modelClass.slice(0, -1)} = async (req, res) => {
   try {
-    const item = await ${modelClass.slice(0, -1)}.findByPk(req.params.id);
+    const item = await Service.obtenerPorId(req.params.id);
     if (!item) return res.status(404).json({ mensaje: "No encontrado" });
     res.json(item);
   } catch (error) {
@@ -64,10 +94,9 @@ export const obtener${modelClass.slice(0, -1)} = async (req, res) => {
 // UPDATE
 export const actualizar${modelClass.slice(0, -1)} = async (req, res) => {
   try {
-    const item = await ${modelClass.slice(0, -1)}.findByPk(req.params.id);
-    if (!item) return res.status(404).json({ mensaje: "No encontrado" });
-    await item.update(req.body);
-    res.json(item);
+    const actualizado = await Service.actualizar(req.params.id, req.body);
+    if (!actualizado) return res.status(404).json({ mensaje: "No encontrado" });
+    res.json(actualizado);
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Error al actualizar ${singular}", error });
@@ -77,9 +106,8 @@ export const actualizar${modelClass.slice(0, -1)} = async (req, res) => {
 // DELETE
 export const eliminar${modelClass.slice(0, -1)} = async (req, res) => {
   try {
-    const item = await ${modelClass.slice(0, -1)}.findByPk(req.params.id);
-    if (!item) return res.status(404).json({ mensaje: "No encontrado" });
-    await item.destroy();
+    const ok = await Service.eliminar(req.params.id);
+    if (!ok) return res.status(404).json({ mensaje: "No encontrado" });
     res.json({ mensaje: "${modelClass.slice(0, -1)} eliminado correctamente" });
   } catch (error) {
     console.error(error);
@@ -87,8 +115,24 @@ export const eliminar${modelClass.slice(0, -1)} = async (req, res) => {
   }
 };
 `;
+  fs.writeFileSync(`${controllersBasePath}/${modelName}BaseController.js`, baseControllerContent);
 
-  fs.writeFileSync(`${controllersPath}/${modelName}Controller.js`, controllerContent);
+
+
+  // ---------- CONTROLADOR ----------
+  const controllerContent = `// controllers/${modelName}Controller.js
+import * as Base from "./base/${modelName}BaseController.js";
+
+
+export const crear${modelClass.slice(0, -1)} = Base.crear${modelClass.slice(0, -1)};
+export const obtener${modelClass} = Base.obtener${modelClass};
+export const obtener${modelClass.slice(0, -1)} = Base.obtener${modelClass.slice(0, -1)};
+export const actualizar${modelClass.slice(0, -1)} = Base.actualizar${modelClass.slice(0, -1)};
+export const eliminar${modelClass.slice(0, -1)} = Base.eliminar${modelClass.slice(0, -1)};
+
+
+`;
+ fs.writeFileSync(`${controllersPath}/${modelName}Controller.js`, controllerContent);
 
   // ---------- RUTA ----------
   const routeContent = `// routes/${modelName}Routes.js
