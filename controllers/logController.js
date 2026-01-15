@@ -1,11 +1,11 @@
 // controllers/logController.js
 import * as Base from "./base/logBaseController.js";
 
+export const crearLog = Base.crearLog;
 
-export const crearLo = Base.crearLo;
+// ✅ alias para que GET / (obtenerLogs) funcione con el base (obtenerTodosLog)
+export const obtenerLogs = Base.obtenerTodosLog;
+
 export const obtenerLog = Base.obtenerLog;
-export const obtenerLo = Base.obtenerLo;
-export const actualizarLo = Base.actualizarLo;
-export const eliminarLo = Base.eliminarLo;
-
-
+export const actualizarLog = Base.actualizarLog;
+export const eliminarLog = Base.eliminarLog;

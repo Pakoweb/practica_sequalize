@@ -13,7 +13,7 @@ export const crearProducto = async (req, res) => {
 };
 
 // READ (todos)
-export const obtenerProductos = async (req, res) => {
+export const obtenerTodosProducto = async (req, res) => {
   try {
     const lista = await Service.listar();
     res.json(lista);
@@ -52,7 +52,7 @@ export const eliminarProducto = async (req, res) => {
   try {
     const ok = await Service.eliminar(req.params.id);
     if (!ok) return res.status(404).json({ mensaje: "No encontrado" });
-    res.json({ mensaje: "Producto eliminado correctamente" });
+    res.json({ mensaje: "producto eliminado correctamente" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Error al eliminar producto", error });

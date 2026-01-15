@@ -13,7 +13,7 @@ export const crearCategoria = async (req, res) => {
 };
 
 // READ (todos)
-export const obtenerCategorias = async (req, res) => {
+export const obtenerTodosCategoria = async (req, res) => {
   try {
     const lista = await Service.listar();
     res.json(lista);
@@ -52,7 +52,7 @@ export const eliminarCategoria = async (req, res) => {
   try {
     const ok = await Service.eliminar(req.params.id);
     if (!ok) return res.status(404).json({ mensaje: "No encontrado" });
-    res.json({ mensaje: "Categoria eliminado correctamente" });
+    res.json({ mensaje: "categoria eliminado correctamente" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Error al eliminar categoria", error });

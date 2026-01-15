@@ -2,7 +2,7 @@
 import * as Service from "../../services/detalles_pedidoService.js";
 
 // CREATE
-export const crearDetalles_pedid = async (req, res) => {
+export const crearDetalles_pedido = async (req, res) => {
   try {
     const nuevo = await Service.crear(req.body);
     res.status(201).json(nuevo);
@@ -13,7 +13,7 @@ export const crearDetalles_pedid = async (req, res) => {
 };
 
 // READ (todos)
-export const obtenerDetalles_pedido = async (req, res) => {
+export const obtenerTodosDetalles_pedido = async (req, res) => {
   try {
     const lista = await Service.listar();
     res.json(lista);
@@ -24,7 +24,7 @@ export const obtenerDetalles_pedido = async (req, res) => {
 };
 
 // READ (uno)
-export const obtenerDetalles_pedid = async (req, res) => {
+export const obtenerDetalles_pedido = async (req, res) => {
   try {
     const item = await Service.obtenerPorId(req.params.id);
     if (!item) return res.status(404).json({ mensaje: "No encontrado" });
@@ -36,7 +36,7 @@ export const obtenerDetalles_pedid = async (req, res) => {
 };
 
 // UPDATE
-export const actualizarDetalles_pedid = async (req, res) => {
+export const actualizarDetalles_pedido = async (req, res) => {
   try {
     const actualizado = await Service.actualizar(req.params.id, req.body);
     if (!actualizado) return res.status(404).json({ mensaje: "No encontrado" });
@@ -48,11 +48,11 @@ export const actualizarDetalles_pedid = async (req, res) => {
 };
 
 // DELETE
-export const eliminarDetalles_pedid = async (req, res) => {
+export const eliminarDetalles_pedido = async (req, res) => {
   try {
     const ok = await Service.eliminar(req.params.id);
     if (!ok) return res.status(404).json({ mensaje: "No encontrado" });
-    res.json({ mensaje: "Detalles_pedid eliminado correctamente" });
+    res.json({ mensaje: "detalles_pedido eliminado correctamente" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Error al eliminar detalles_pedido", error });

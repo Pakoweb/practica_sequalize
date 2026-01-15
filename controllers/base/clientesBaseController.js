@@ -13,7 +13,7 @@ export const crearCliente = async (req, res) => {
 };
 
 // READ (todos)
-export const obtenerClientes = async (req, res) => {
+export const obtenerTodosCliente = async (req, res) => {
   try {
     const lista = await Service.listar();
     res.json(lista);
@@ -52,7 +52,7 @@ export const eliminarCliente = async (req, res) => {
   try {
     const ok = await Service.eliminar(req.params.id);
     if (!ok) return res.status(404).json({ mensaje: "No encontrado" });
-    res.json({ mensaje: "Cliente eliminado correctamente" });
+    res.json({ mensaje: "cliente eliminado correctamente" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Error al eliminar cliente", error });

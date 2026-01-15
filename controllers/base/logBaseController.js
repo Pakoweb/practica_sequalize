@@ -2,7 +2,7 @@
 import * as Service from "../../services/logService.js";
 
 // CREATE
-export const crearLo = async (req, res) => {
+export const crearLog = async (req, res) => {
   try {
     const nuevo = await Service.crear(req.body);
     res.status(201).json(nuevo);
@@ -13,7 +13,7 @@ export const crearLo = async (req, res) => {
 };
 
 // READ (todos)
-export const obtenerLog = async (req, res) => {
+export const obtenerTodosLog = async (req, res) => {
   try {
     const lista = await Service.listar();
     res.json(lista);
@@ -24,7 +24,7 @@ export const obtenerLog = async (req, res) => {
 };
 
 // READ (uno)
-export const obtenerLo = async (req, res) => {
+export const obtenerLog = async (req, res) => {
   try {
     const item = await Service.obtenerPorId(req.params.id);
     if (!item) return res.status(404).json({ mensaje: "No encontrado" });
@@ -36,7 +36,7 @@ export const obtenerLo = async (req, res) => {
 };
 
 // UPDATE
-export const actualizarLo = async (req, res) => {
+export const actualizarLog = async (req, res) => {
   try {
     const actualizado = await Service.actualizar(req.params.id, req.body);
     if (!actualizado) return res.status(404).json({ mensaje: "No encontrado" });
@@ -48,11 +48,11 @@ export const actualizarLo = async (req, res) => {
 };
 
 // DELETE
-export const eliminarLo = async (req, res) => {
+export const eliminarLog = async (req, res) => {
   try {
     const ok = await Service.eliminar(req.params.id);
     if (!ok) return res.status(404).json({ mensaje: "No encontrado" });
-    res.json({ mensaje: "Lo eliminado correctamente" });
+    res.json({ mensaje: "log eliminado correctamente" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Error al eliminar log", error });
