@@ -3,7 +3,7 @@ import * as Base from "./base/pedidosBaseController.js";
 
 export const crearPedido = Base.crearPedido;
 
-// ✅ alias: la ruta usa obtenerPedidos, el base expone obtenerTodosPedido
+
 export const obtenerPedidos = Base.obtenerTodosPedido;
 
 export const obtenerPedido = Base.obtenerPedido;

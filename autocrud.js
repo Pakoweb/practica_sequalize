@@ -13,14 +13,14 @@ fs.mkdirSync(controllersBasePath, { recursive: true });
 fs.mkdirSync(servicesPath, { recursive: true });
 fs.mkdirSync(routesPath, { recursive: true });
 
-// ✅ Crea archivos SOLO si no existen (para no perder personalizaciones)
+// Crea archivos SOLO si no existen (para no perder personalizaciones)
 const writeIfNotExists = (filePath, content) => {
   if (fs.existsSync(filePath)) {
-    console.log(`↪️  Se mantiene (no se sobrescribe): ${filePath}`);
+    console.log(`Se mantiene (no se sobrescribe): ${filePath}`);
     return;
   }
   fs.writeFileSync(filePath, content);
-  console.log(`🆕 Creado: ${filePath}`);
+  console.log(` Creado: ${filePath}`);
 };
 
 // Filtra modelos
@@ -41,7 +41,7 @@ for (const modelFile of models) {
   const deleteHandler = `eliminar${singularClass}`;
 
   // ---------- SERVICE ----------
-  // ✅ Se sobrescribe siempre (genérico)
+  // Se sobrescribe siempre (genérico)
   const serviceContent = `// services/${modelName}Service.js
 import { sequelize } from "../config/db.js";
 import ${modelName} from "../models/${modelFile}";
@@ -71,7 +71,7 @@ export const eliminar = async (id) => {
   fs.writeFileSync(`${servicesPath}/${modelName}Service.js`, serviceContent);
 
   // ---------- BASE CONTROLLER ----------
-  // ✅ Se sobrescribe siempre (esto es lo regenerable)
+  // Se sobrescribe siempre (esto es lo regenerable)
   const baseControllerContent = `// controllers/base/${modelName}BaseController.js
 import * as Service from "../../services/${modelName}Service.js";
 
@@ -139,7 +139,7 @@ export const ${deleteHandler} = async (req, res) => {
   );
 
   // ---------- EXTENDED CONTROLLER ----------
-  // ✅ NO se sobrescribe (aquí metes lógica personalizada)
+  // NO se sobrescribe 
   const controllerContent = `// controllers/${modelName}Controller.js
 import * as Base from "./base/${modelName}BaseController.js";
 
@@ -153,7 +153,7 @@ export const ${deleteHandler} = Base.${deleteHandler};
   writeIfNotExists(`${controllersPath}/${modelName}Controller.js`, controllerContent);
 
   // ---------- ROUTES ----------
-  // ✅ NO se sobrescribe
+  // NO se sobrescribe
   const routeContent = `// routes/${modelName}Routes.js
 import express from "express";
 import {
