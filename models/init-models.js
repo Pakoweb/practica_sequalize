@@ -1,12 +1,12 @@
 import _sequelize from "sequelize";
 const DataTypes = _sequelize.DataTypes;
-import _log4 from  "./log4.js";
+import _adri17 from  "./adri17.js";
 
 export default function initModels(sequelize) {
-  const log4 = _log4.init(sequelize, DataTypes);
+  const adri17 = _adri17.init(sequelize, DataTypes);
 
 
   return {
-    log4,
+    adri17,
   };
 }

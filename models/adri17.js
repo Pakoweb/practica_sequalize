@@ -1,7 +1,7 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class log4 extends Model {
+export default class adri17 extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
     id: {
@@ -10,13 +10,17 @@ export default class log4 extends Model {
       allowNull: false,
       primaryKey: true
     },
-    log: {
+    adri: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    descripcion: {
       type: DataTypes.TEXT,
       allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'log4',
+    tableName: 'adri17',
     timestamps: false,
     indexes: [
       {
@@ -31,5 +35,3 @@ export default class log4 extends Model {
   });
   }
 }
-
-////npx sequelize-auto -h localhost -d api_rest_db -u root -x "" -p 3306 --dialect mysql -o "./models" -l esm -t "poner aqui el nombre de la tabla"
